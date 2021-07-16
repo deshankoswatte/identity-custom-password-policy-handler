@@ -18,6 +18,36 @@
 
 package org.wso2.carbon.identity.custom.password.policy.handler.validator.impl;
 
-public class CommonPasswordValidator {
+import org.wso2.carbon.identity.custom.password.policy.handler.validator.PasswordValidator;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class CommonPasswordValidator implements PasswordValidator {
+
+    private List<String> commonPasswords = new ArrayList<>();
+    private static final CommonPasswordValidator commonPasswordValidator = new CommonPasswordValidator();
+
+    private CommonPasswordValidator() {
+
+    }
+
+    public static CommonPasswordValidator getInstance() {
+
+        return commonPasswordValidator;
+    }
+
+    @Override
+    public void initializeData() {
+
+        commonPasswords = Arrays.asList("123456", "password", "12345678", "qwerty", "123456789", "12345", "1234",
+                "111111", "1234567", "dragon");
+    }
+
+    @Override
+    public boolean validateCredentials(String credential) {
+
+        return !commonPasswords.contains(credential);
+    }
 }

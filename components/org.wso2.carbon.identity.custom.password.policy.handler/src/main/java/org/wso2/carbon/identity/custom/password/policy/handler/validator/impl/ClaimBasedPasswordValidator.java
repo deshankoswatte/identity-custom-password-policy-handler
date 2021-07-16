@@ -18,6 +18,18 @@
 
 package org.wso2.carbon.identity.custom.password.policy.handler.validator.impl;
 
-public class ClaimBasedPasswordValidator {
+import org.wso2.carbon.identity.custom.password.policy.handler.validator.PasswordValidator;
 
+public class ClaimBasedPasswordValidator implements PasswordValidator {
+
+    @Override
+    public void initializeData() {
+
+    }
+
+    @Override
+    public boolean validateCredentials(String credentials) {
+
+        return false;
+    }
 }

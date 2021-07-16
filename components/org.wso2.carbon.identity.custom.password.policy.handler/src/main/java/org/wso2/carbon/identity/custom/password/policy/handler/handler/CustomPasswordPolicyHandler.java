@@ -24,6 +24,7 @@ import org.wso2.carbon.identity.core.bean.context.MessageContext;
 import org.wso2.carbon.identity.core.handler.InitConfig;
 import org.wso2.carbon.identity.custom.password.policy.handler.constants.CustomPasswordPolicyHandlerConstants;
 import org.wso2.carbon.identity.custom.password.policy.handler.internal.IdentityCustomPasswordPolicyHandlerServiceDataHolder;
+import org.wso2.carbon.identity.custom.password.policy.handler.validator.impl.CommonPasswordValidator;
 import org.wso2.carbon.identity.event.IdentityEventConstants;
 import org.wso2.carbon.identity.event.IdentityEventException;
 import org.wso2.carbon.identity.event.event.Event;
@@ -46,7 +47,7 @@ public class CustomPasswordPolicyHandler extends AbstractEventHandler implements
 
         String userName = (String) eventProperties.get(IdentityEventConstants.EventProperty.USER_NAME);
         String tenantDomain = (String) eventProperties.get(IdentityEventConstants.EventProperty.TENANT_DOMAIN);
-        String credentials = (String) eventProperties.get(IdentityEventConstants.EventProperty.CREDENTIAL);
+        String credential = (String) eventProperties.get(IdentityEventConstants.EventProperty.CREDENTIAL);
 
         Property[] identityProperties;
         try {
@@ -54,6 +55,11 @@ public class CustomPasswordPolicyHandler extends AbstractEventHandler implements
                     .getIdentityGovernanceService().getConfiguration(getPropertyNames(), tenantDomain);
         } catch (IdentityGovernanceException e) {
             throw new IdentityEventException("Error while retrieving password policy properties.", e);
+        }
+
+        if (!CommonPasswordValidator.getInstance().validateCredentials(credential)) {
+
+            throw new IdentityEventException("The new password is vulnerable for security issues. Please use another password.");
         }
     }
 

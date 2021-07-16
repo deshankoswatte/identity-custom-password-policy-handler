@@ -29,6 +29,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.carbon.identity.custom.password.policy.handler.handler.CustomPasswordPolicyHandler;
+import org.wso2.carbon.identity.custom.password.policy.handler.validator.impl.CommonPasswordValidator;
 import org.wso2.carbon.identity.event.handler.AbstractEventHandler;
 import org.wso2.carbon.identity.governance.IdentityGovernanceService;
 
@@ -50,6 +51,8 @@ public class IdentityCustomPasswordPolicyHandlerServiceComponent {
             IdentityCustomPasswordPolicyHandlerServiceDataHolder.getInstance().setBundleContext(bundleContext);
             CustomPasswordPolicyHandler handler = new CustomPasswordPolicyHandler();
             context.getBundleContext().registerService(AbstractEventHandler.class.getName(), handler, null);
+
+            CommonPasswordValidator.getInstance().initializeData();
         } catch (Exception e) {
             log.error("Error while activating the session termination service component.", e);
         }
