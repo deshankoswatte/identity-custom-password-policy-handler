@@ -20,6 +20,9 @@ package org.wso2.carbon.identity.custom.password.policy.handler.validator.impl;
 
 import org.wso2.carbon.identity.custom.password.policy.handler.validator.PasswordValidator;
 
+/**
+ * A singleton class to restrict the use of claim based passwords.
+ */
 public class ClaimBasedPasswordValidator implements PasswordValidator {
 
     @Override

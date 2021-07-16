@@ -24,20 +24,34 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * A singleton class to restrict the use of common passwords.
+ */
 public class CommonPasswordValidator implements PasswordValidator {
 
     private List<String> commonPasswords = new ArrayList<>();
     private static final CommonPasswordValidator commonPasswordValidator = new CommonPasswordValidator();
 
+    /**
+     * Private constructor so this class cannot be instantiated by other classes.
+     */
     private CommonPasswordValidator() {
 
     }
 
+    /**
+     * Retrieve the singleton instance of the CommonPasswordValidator.
+     *
+     * @return An instance of the CommonPasswordValidator.
+     */
     public static CommonPasswordValidator getInstance() {
 
         return commonPasswordValidator;
     }
 
+    /**
+     * Initialize the repository/database with the common password records.
+     */
     @Override
     public void initializeData() {
 
@@ -45,6 +59,14 @@ public class CommonPasswordValidator implements PasswordValidator {
                 "111111", "1234567", "dragon");
     }
 
+    /**
+     * Checks whether the user credential contains any of the common passwords
+     * that reside in the repository.
+     *
+     * @param credential The password of the user.
+     * @return True if the password does not match any record in the common password
+     * repository, false if else.
+     */
     @Override
     public boolean validateCredentials(String credential) {
 

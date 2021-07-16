@@ -21,9 +21,12 @@ package org.wso2.carbon.identity.custom.password.policy.handler.internal;
 import org.osgi.framework.BundleContext;
 import org.wso2.carbon.identity.governance.IdentityGovernanceService;
 
+/**
+ * Data holder for the custom password policy component.
+ */
 public class IdentityCustomPasswordPolicyHandlerServiceDataHolder {
 
-    private static IdentityCustomPasswordPolicyHandlerServiceDataHolder instance = new IdentityCustomPasswordPolicyHandlerServiceDataHolder();
+    private static final IdentityCustomPasswordPolicyHandlerServiceDataHolder instance = new IdentityCustomPasswordPolicyHandlerServiceDataHolder();
     private IdentityGovernanceService identityGovernanceService;
     private BundleContext bundleContext;
 

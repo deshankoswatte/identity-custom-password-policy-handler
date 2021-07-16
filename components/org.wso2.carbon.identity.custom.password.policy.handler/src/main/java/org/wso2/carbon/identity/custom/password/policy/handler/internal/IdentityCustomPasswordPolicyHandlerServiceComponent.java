@@ -33,6 +33,9 @@ import org.wso2.carbon.identity.custom.password.policy.handler.validator.impl.Co
 import org.wso2.carbon.identity.event.handler.AbstractEventHandler;
 import org.wso2.carbon.identity.governance.IdentityGovernanceService;
 
+/**
+ * OSGi service component which registers the custom password policy event handler and sets the bundle context.
+ */
 @Component(
         name = "org.wso2.carbon.identity.custom.password.policy.handler.internal.IdentityCustomPasswordPolicyServiceComponent",
         immediate = true)
@@ -45,16 +48,18 @@ public class IdentityCustomPasswordPolicyHandlerServiceComponent {
 
         try {
             if (log.isDebugEnabled()) {
-                log.debug("The session termination service component is enabled.");
+                log.debug("The custom password policy handler service component is enabled.");
             }
             BundleContext bundleContext = context.getBundleContext();
             IdentityCustomPasswordPolicyHandlerServiceDataHolder.getInstance().setBundleContext(bundleContext);
+
             CustomPasswordPolicyHandler handler = new CustomPasswordPolicyHandler();
             context.getBundleContext().registerService(AbstractEventHandler.class.getName(), handler, null);
 
+            // Initialize the common password data repository.
             CommonPasswordValidator.getInstance().initializeData();
         } catch (Exception e) {
-            log.error("Error while activating the session termination service component.", e);
+            log.error("Error while activating the custom password policy handler service component.", e);
         }
     }
 
@@ -62,7 +67,7 @@ public class IdentityCustomPasswordPolicyHandlerServiceComponent {
     protected void deactivate(ComponentContext context) {
 
         if (log.isDebugEnabled()) {
-            log.debug("The session termination service component is de-activated.");
+            log.debug("The custom password policy handler service component is de-activated.");
         }
     }
 

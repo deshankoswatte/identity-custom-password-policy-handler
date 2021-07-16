@@ -18,8 +18,12 @@
 
 package org.wso2.carbon.identity.custom.password.policy.handler.constants;
 
+/**
+ * This class consists of the constants that are used throughout the custom password policy handler component.
+ */
 public class CustomPasswordPolicyHandlerConstants {
 
+    // Constants defining the configuration details for the common password restriction process.
     public static final String CONFIG_ENABLE_COMMON_PASSWORD_RESTRICTION =
             "customPasswordPolicyHandler.enableCommonPasswordRestriction";
     public static final String CONFIG_ENABLE_COMMON_PASSWORD_RESTRICTION_DISPLAYED_NAME =
@@ -28,6 +32,7 @@ public class CustomPasswordPolicyHandlerConstants {
             "Enable to restrict the use of common passwords.";
     public static final boolean CONFIG_ENABLE_COMMON_PASSWORD_RESTRICTION_DEFAULT_VALUE = false;
 
+    // Constants defining the configuration details for the common password restriction process.
     public static final String CONFIG_ENABLE_CLAIM_BASED_PASSWORD_RESTRICTION =
             "customPasswordPolicyHandler.enableClaimBasedPasswordRestriction";
     public static final String CONFIG_ENABLE_CLAIM_BASED_PASSWORD_RESTRICTION_DISPLAYED_NAME =
