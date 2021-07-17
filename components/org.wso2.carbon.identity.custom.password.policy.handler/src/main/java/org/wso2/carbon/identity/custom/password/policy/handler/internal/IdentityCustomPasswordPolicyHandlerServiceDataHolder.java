@@ -22,7 +22,7 @@ import org.osgi.framework.BundleContext;
 import org.wso2.carbon.identity.governance.IdentityGovernanceService;
 
 /**
- * Data holder for the custom password policy component.
+ * Data holder for the custom password policy handler component.
  */
 public class IdentityCustomPasswordPolicyHandlerServiceDataHolder {
 

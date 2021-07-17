@@ -32,7 +32,7 @@ public class CustomPasswordPolicyHandlerConstants {
             "Enable to restrict the use of common passwords.";
     public static final boolean CONFIG_ENABLE_COMMON_PASSWORD_RESTRICTION_DEFAULT_VALUE = false;
 
-    // Constants defining the configuration details for the common password restriction process.
+    // Constants defining the configuration details for the claim based password restriction process.
     public static final String CONFIG_ENABLE_CLAIM_BASED_PASSWORD_RESTRICTION =
             "customPasswordPolicyHandler.enableClaimBasedPasswordRestriction";
     public static final String CONFIG_ENABLE_CLAIM_BASED_PASSWORD_RESTRICTION_DISPLAYED_NAME =
@@ -40,4 +40,45 @@ public class CustomPasswordPolicyHandlerConstants {
     public static final String CONFIG_ENABLE_CLAIM_BASED_PASSWORD_RESTRICTION_DESCRIPTION =
             "Enable to restrict the use of claim based passwords.";
     public static final boolean CONFIG_ENABLE_CLAIM_BASED_PASSWORD_RESTRICTION_DEFAULT_VALUE = false;
+
+    /**
+     * Enum class defined for the custom password policy handler component specific error messages.
+     */
+    public enum ErrorMessages {
+
+        // Error code enforced when the password either contains a common password or a user claim.
+        ERROR_CODE_VALIDATING_PASSWORD_POLICY(
+                "40001",
+                "The new password is vulnerable for security issues. Please use another password instead."
+        );
+
+        // Instance variables for the error code and message.
+        private final String code;
+        private final String message;
+
+        // Constructor to instantiate an instance of the enum.
+        ErrorMessages(String code, String message) {
+
+            this.code = code;
+            this.message = message;
+        }
+
+        // Getter methods that provides access to instance variable values for other classes.
+        public String getCode() {
+
+            return code;
+        }
+
+        public String getMessage() {
+
+            return message;
+        }
+
+        // ErrorMessages class representation through a string.
+        @Override
+        public String toString() {
+
+            return code + " - " + message;
+        }
+    }
 }

@@ -32,7 +32,6 @@ public interface PasswordValidator {
      * Validates credentials based on custom criterias.
      *
      * @param credentials The password of the user to be validated.
-     *
      * @return True if the validation is successful, false if else.
      */
     boolean validateCredentials(String credentials);

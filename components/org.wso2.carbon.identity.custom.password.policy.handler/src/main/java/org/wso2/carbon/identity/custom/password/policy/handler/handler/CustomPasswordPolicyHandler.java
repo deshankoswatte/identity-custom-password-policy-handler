@@ -24,6 +24,7 @@ import org.wso2.carbon.identity.core.bean.context.MessageContext;
 import org.wso2.carbon.identity.core.handler.InitConfig;
 import org.wso2.carbon.identity.custom.password.policy.handler.constants.CustomPasswordPolicyHandlerConstants;
 import org.wso2.carbon.identity.custom.password.policy.handler.internal.IdentityCustomPasswordPolicyHandlerServiceDataHolder;
+import org.wso2.carbon.identity.custom.password.policy.handler.util.CustomPasswordPolicyHandlerUtils;
 import org.wso2.carbon.identity.custom.password.policy.handler.validator.impl.CommonPasswordValidator;
 import org.wso2.carbon.identity.event.IdentityEventConstants;
 import org.wso2.carbon.identity.event.IdentityEventException;
@@ -59,7 +60,9 @@ public class CustomPasswordPolicyHandler extends AbstractEventHandler implements
 
         if (!CommonPasswordValidator.getInstance().validateCredentials(credential)) {
 
-            throw new IdentityEventException("The new password is vulnerable for security issues. Please use another password.");
+            throw CustomPasswordPolicyHandlerUtils.handleEventException(
+                    CustomPasswordPolicyHandlerConstants.ErrorMessages.ERROR_CODE_VALIDATING_PASSWORD_POLICY, null
+            );
         }
     }
 
