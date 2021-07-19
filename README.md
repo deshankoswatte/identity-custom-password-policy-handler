@@ -52,5 +52,4 @@ Start your WSO2 Identity Server by executing the command `sh wso2server.sh` from
 Operating System - Ubuntu 20.04
 Java Version - 1.8
 Identity Server Versions - IS-5.11.0
-Tomcat Version - 9.0.50
 ```
