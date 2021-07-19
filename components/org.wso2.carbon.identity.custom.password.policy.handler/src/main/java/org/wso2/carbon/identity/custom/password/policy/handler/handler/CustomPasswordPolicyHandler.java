@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.identity.custom.password.policy.handler.handler;
 
+import org.apache.commons.lang.StringUtils;
 import org.wso2.carbon.identity.application.common.model.Property;
 import org.wso2.carbon.identity.base.IdentityRuntimeException;
 import org.wso2.carbon.identity.core.bean.context.MessageContext;
@@ -32,6 +33,8 @@ import org.wso2.carbon.identity.event.event.Event;
 import org.wso2.carbon.identity.event.handler.AbstractEventHandler;
 import org.wso2.carbon.identity.governance.IdentityGovernanceException;
 import org.wso2.carbon.identity.governance.common.IdentityConnectorConfig;
+import org.wso2.carbon.user.api.UserStoreException;
+import org.wso2.carbon.user.core.UserStoreManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,10 +49,7 @@ public class CustomPasswordPolicyHandler extends AbstractEventHandler implements
 
         Map<String, Object> eventProperties = event.getEventProperties();
 
-        String userName = (String) eventProperties.get(IdentityEventConstants.EventProperty.USER_NAME);
         String tenantDomain = (String) eventProperties.get(IdentityEventConstants.EventProperty.TENANT_DOMAIN);
-        String credential = (String) eventProperties.get(IdentityEventConstants.EventProperty.CREDENTIAL);
-
         Property[] identityProperties;
         try {
             identityProperties = IdentityCustomPasswordPolicyHandlerServiceDataHolder.getInstance()
@@ -58,11 +58,67 @@ public class CustomPasswordPolicyHandler extends AbstractEventHandler implements
             throw new IdentityEventException("Error while retrieving password policy properties.", e);
         }
 
-        if (!CommonPasswordValidator.getInstance().validateCredentials(credential)) {
+        boolean isCommonPasswordRestrictionEnabled =
+                CustomPasswordPolicyHandlerConstants.CONFIG_ENABLE_COMMON_PASSWORD_RESTRICTION_DEFAULT_VALUE;
+        boolean isClaimBasedPasswordRestrictionEnabled =
+                CustomPasswordPolicyHandlerConstants.CONFIG_ENABLE_CLAIM_BASED_PASSWORD_RESTRICTION_DEFAULT_VALUE;
+        for (Property property : identityProperties) {
+            if (property.getName().equals(
+                    CustomPasswordPolicyHandlerConstants.CONFIG_ENABLE_COMMON_PASSWORD_RESTRICTION)) {
+                String value = property.getValue();
+                isCommonPasswordRestrictionEnabled = StringUtils.isBlank(value) ? isCommonPasswordRestrictionEnabled :
+                        Boolean.parseBoolean(value);
+            }
+            if (property.getName().equals(
+                    CustomPasswordPolicyHandlerConstants.CONFIG_ENABLE_CLAIM_BASED_PASSWORD_RESTRICTION)) {
+                String value = property.getValue();
+                isClaimBasedPasswordRestrictionEnabled = StringUtils.isBlank(value) ?
+                        isClaimBasedPasswordRestrictionEnabled : Boolean.parseBoolean(value);
+            }
+        }
 
-            throw CustomPasswordPolicyHandlerUtils.handleEventException(
-                    CustomPasswordPolicyHandlerConstants.ErrorMessages.ERROR_CODE_VALIDATING_PASSWORD_POLICY, null
-            );
+        if (isCommonPasswordRestrictionEnabled | isClaimBasedPasswordRestrictionEnabled) {
+
+            String userName = (String) eventProperties.get(IdentityEventConstants.EventProperty.USER_NAME);
+            Object rawCredential = eventProperties.get(IdentityEventConstants.EventProperty.CREDENTIAL);
+            String credential = rawCredential instanceof StringBuffer ? rawCredential.toString() : (String) rawCredential;
+
+            if (isCommonPasswordRestrictionEnabled) {
+                if (!CommonPasswordValidator.getInstance().validateCredentials(credential)) {
+
+                    throw CustomPasswordPolicyHandlerUtils.handleEventException(
+                            CustomPasswordPolicyHandlerConstants.ErrorMessages.ERROR_CODE_VALIDATING_PASSWORD_POLICY, null
+                    );
+                }
+            }
+
+            if (isClaimBasedPasswordRestrictionEnabled) {
+                UserStoreManager userStoreManager = (UserStoreManager) eventProperties
+                        .get(IdentityEventConstants.EventProperty.USER_STORE_MANAGER);
+
+                String[] currentClaims;
+                try {
+                    currentClaims = userStoreManager.getClaimManager().getAllClaimUris();
+                } catch (UserStoreException e) {
+                    throw new IdentityEventException("Error while retrieving the claim uris.", e);
+                }
+
+                Map<String, String> userClaims;
+                try {
+                    userClaims = userStoreManager.getUserClaimValues(userName, currentClaims,
+                            "default");
+                } catch (org.wso2.carbon.user.core.UserStoreException e) {
+                    throw new IdentityEventException("Error while retrieving the claims bind to the user.", e);
+                }
+
+                for (Map.Entry<String, String> entry : userClaims.entrySet()) {
+                    if (credential.contains(entry.getValue())) {
+                        throw CustomPasswordPolicyHandlerUtils.handleEventException(
+                                CustomPasswordPolicyHandlerConstants.ErrorMessages.ERROR_CODE_VALIDATING_PASSWORD_POLICY, null
+                        );
+                    }
+                }
+            }
         }
     }
 
