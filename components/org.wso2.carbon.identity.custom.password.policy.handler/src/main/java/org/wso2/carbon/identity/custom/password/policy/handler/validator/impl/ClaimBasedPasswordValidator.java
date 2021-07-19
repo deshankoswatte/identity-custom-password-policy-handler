@@ -71,8 +71,9 @@ public class ClaimBasedPasswordValidator implements PasswordValidator {
         }
 
         try {
-            userClaims = userStoreManager.getUserClaimValues(userName, currentClaims,
-                    "default");
+            userClaims = eventProperties.get(IdentityEventConstants.EventProperty.USER_CLAIMS) == null ?
+                    userStoreManager.getUserClaimValues(userName, currentClaims, "default") :
+                    (Map<String, String>) eventProperties.get(IdentityEventConstants.EventProperty.USER_CLAIMS);
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
             throw new IdentityEventException("Error while retrieving the claims bind to the user.", e);
         }
