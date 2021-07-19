@@ -24,16 +24,11 @@ package org.wso2.carbon.identity.custom.password.policy.handler.validator;
 public interface PasswordValidator {
 
     /**
-     * Initialize the data required for the validator.
-     */
-    void initializeData();
-
-    /**
      * Validates credentials based on custom criterias.
      *
-     * @param credentials The password of the user to be validated.
+     * @param credential The password of the user to be validated.
      * @return True if the validation is successful, false if else.
      */
-    boolean validateCredentials(String credentials);
+    boolean validateCredentials(String credential);
 
 }

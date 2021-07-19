@@ -52,7 +52,6 @@ public class CommonPasswordValidator implements PasswordValidator {
     /**
      * Initialize the repository/database with the common password records.
      */
-    @Override
     public void initializeData() {
 
         commonPasswords = Arrays.asList("123456", "password", "12345678", "qwerty", "123456789", "12345", "1234",

@@ -26,6 +26,7 @@ import org.wso2.carbon.identity.core.handler.InitConfig;
 import org.wso2.carbon.identity.custom.password.policy.handler.constants.CustomPasswordPolicyHandlerConstants;
 import org.wso2.carbon.identity.custom.password.policy.handler.internal.IdentityCustomPasswordPolicyHandlerServiceDataHolder;
 import org.wso2.carbon.identity.custom.password.policy.handler.util.CustomPasswordPolicyHandlerUtils;
+import org.wso2.carbon.identity.custom.password.policy.handler.validator.impl.ClaimBasedPasswordValidator;
 import org.wso2.carbon.identity.custom.password.policy.handler.validator.impl.CommonPasswordValidator;
 import org.wso2.carbon.identity.event.IdentityEventConstants;
 import org.wso2.carbon.identity.event.IdentityEventException;
@@ -33,8 +34,6 @@ import org.wso2.carbon.identity.event.event.Event;
 import org.wso2.carbon.identity.event.handler.AbstractEventHandler;
 import org.wso2.carbon.identity.governance.IdentityGovernanceException;
 import org.wso2.carbon.identity.governance.common.IdentityConnectorConfig;
-import org.wso2.carbon.user.api.UserStoreException;
-import org.wso2.carbon.user.core.UserStoreManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -93,30 +92,13 @@ public class CustomPasswordPolicyHandler extends AbstractEventHandler implements
             }
 
             if (isClaimBasedPasswordRestrictionEnabled) {
-                UserStoreManager userStoreManager = (UserStoreManager) eventProperties
-                        .get(IdentityEventConstants.EventProperty.USER_STORE_MANAGER);
+                ClaimBasedPasswordValidator claimBasedPasswordValidator = ClaimBasedPasswordValidator.getInstance();
+                claimBasedPasswordValidator.initializeData(eventProperties, userName);
+                if (!claimBasedPasswordValidator.validateCredentials(credential)) {
 
-                String[] currentClaims;
-                try {
-                    currentClaims = userStoreManager.getClaimManager().getAllClaimUris();
-                } catch (UserStoreException e) {
-                    throw new IdentityEventException("Error while retrieving the claim uris.", e);
-                }
-
-                Map<String, String> userClaims;
-                try {
-                    userClaims = userStoreManager.getUserClaimValues(userName, currentClaims,
-                            "default");
-                } catch (org.wso2.carbon.user.core.UserStoreException e) {
-                    throw new IdentityEventException("Error while retrieving the claims bind to the user.", e);
-                }
-
-                for (Map.Entry<String, String> entry : userClaims.entrySet()) {
-                    if (credential.contains(entry.getValue())) {
-                        throw CustomPasswordPolicyHandlerUtils.handleEventException(
-                                CustomPasswordPolicyHandlerConstants.ErrorMessages.ERROR_CODE_VALIDATING_PASSWORD_POLICY, null
-                        );
-                    }
+                    throw CustomPasswordPolicyHandlerUtils.handleEventException(
+                            CustomPasswordPolicyHandlerConstants.ErrorMessages.ERROR_CODE_VALIDATING_PASSWORD_POLICY, null
+                    );
                 }
             }
         }
