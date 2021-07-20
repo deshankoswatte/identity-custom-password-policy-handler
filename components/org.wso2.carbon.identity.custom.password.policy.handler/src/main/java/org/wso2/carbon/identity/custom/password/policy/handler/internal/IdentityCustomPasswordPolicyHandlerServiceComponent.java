@@ -66,6 +66,13 @@ public class IdentityCustomPasswordPolicyHandlerServiceComponent {
     @Deactivate
     protected void deactivate(ComponentContext context) {
 
+        try {
+            // Destroy the common password data repository.
+            CommonPasswordValidator.getInstance().destroyData();
+        } catch (Exception e) {
+            log.error("Error while deactivating the custom password policy handler service component.", e);
+        }
+
         if (log.isDebugEnabled()) {
             log.debug("The custom password policy handler service component is de-activated.");
         }

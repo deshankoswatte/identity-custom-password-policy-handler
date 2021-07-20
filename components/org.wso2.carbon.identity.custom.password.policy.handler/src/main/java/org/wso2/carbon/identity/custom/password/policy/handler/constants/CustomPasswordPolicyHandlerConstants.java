@@ -18,6 +18,8 @@
 
 package org.wso2.carbon.identity.custom.password.policy.handler.constants;
 
+import org.wso2.carbon.utils.CarbonUtils;
+
 /**
  * This class consists of the constants that are used throughout the custom password policy handler component.
  */
@@ -40,6 +42,24 @@ public class CustomPasswordPolicyHandlerConstants {
     public static final String CONFIG_ENABLE_CLAIM_BASED_PASSWORD_RESTRICTION_DESCRIPTION =
             "Enable to restrict the use of claim based passwords.";
     public static final boolean CONFIG_ENABLE_CLAIM_BASED_PASSWORD_RESTRICTION_DEFAULT_VALUE = false;
+
+    // SQL Queries related to the custom password policy handler component.
+    public static final String CREATE_COMMON_PASSWORD_STORE =
+            "CREATE TABLE IF NOT EXISTS IDN_CMN_PWD (" +
+                    "PASSWORD VARCHAR(255) NOT NULL," +
+                    "PRIMARY KEY (PASSWORD));";
+    public static final String INSERT_VALUES_TO_COMMON_PASSWORD_STORE =
+            "REPLACE INTO IDN_CMN_PWD (PASSWORD) VALUES (?);";
+    public static final String SELECT_COMMON_PASSWORDS_LIKE =
+            "SELECT PASSWORD FROM IDN_CMN_PWD WHERE PASSWORD IN (?)";
+    public static final String DROP_COMMON_PASSWORD_STORE =
+            "DROP TABLE IF EXISTS IDN_CMN_PWD;";
+
+    // Common passwords text file location related constants.
+    public static final String PASSWORD_FILE_NAME = "commonpasswords.txt";
+    public static final String PASSWORD_FILE_DIR = CarbonUtils.getCarbonHome()
+            + "/repository/deployment/server/commonpasswords";
+    public static final String PASSWORD_FILE_PATH = PASSWORD_FILE_DIR + "/" + PASSWORD_FILE_NAME;
 
     /**
      * Enum class defined for the custom password policy handler component specific error messages.
