@@ -29,9 +29,10 @@ mvn clean install
 
 ### Deploy
 
-After a successfully building the project, copy the
-`org.wso2.carbon.identity.custom.password.policy.handler-1.0.0-SNAPSHOT.jar` artifact from the target folder and paste
-it inside `<IS HOME>/repository/components/dropins` folder.
+After a successfully building the project, copy the `org.wso2.carbon.identity.custom.password.policy.handler-1.0.0-SNAPSHOT.jar`
+artifact from the target folder and paste it inside `<IS HOME>/repository/components/dropins` folder.Then, copy
+the `commonpasswords.txt` file from `target/classes` and paste it in `<IS HOME>/repository/deployment/server/commonpasswords` 
+(Note: You should create the directory `commonpasswords` if it does not exist)
 
 ## Run
 
