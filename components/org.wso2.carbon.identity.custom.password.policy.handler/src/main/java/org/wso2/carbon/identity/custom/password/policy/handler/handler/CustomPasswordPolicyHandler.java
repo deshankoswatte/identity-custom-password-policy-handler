@@ -86,7 +86,7 @@ public class CustomPasswordPolicyHandler extends AbstractEventHandler implements
                 if (!CommonPasswordValidator.getInstance().validateCredentials(credential)) {
 
                     throw CustomPasswordPolicyHandlerUtils.handleEventException(
-                            CustomPasswordPolicyHandlerConstants.ErrorMessages.ERROR_CODE_VALIDATING_PASSWORD_POLICY, null
+                            CustomPasswordPolicyHandlerConstants.ErrorMessages.ERROR_CODE_VALIDATING_COMMON_PASSWORD_POLICY, null
                     );
                 }
             }
@@ -97,7 +97,7 @@ public class CustomPasswordPolicyHandler extends AbstractEventHandler implements
                 if (!claimBasedPasswordValidator.validateCredentials(credential)) {
 
                     throw CustomPasswordPolicyHandlerUtils.handleEventException(
-                            CustomPasswordPolicyHandlerConstants.ErrorMessages.ERROR_CODE_VALIDATING_PASSWORD_POLICY, null
+                            CustomPasswordPolicyHandlerConstants.ErrorMessages.ERROR_CODE_VALIDATING_USER_ATTRIBUTE_PASSWORD_POLICY, null
                     );
                 }
             }

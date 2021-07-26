@@ -67,9 +67,14 @@ public class CustomPasswordPolicyHandlerConstants {
     public enum ErrorMessages {
 
         // Error code enforced when the password either contains a common password or a user claim.
-        ERROR_CODE_VALIDATING_PASSWORD_POLICY(
-                "40001",
-                "The new password is vulnerable for security issues. Please use another password instead."
+        ERROR_CODE_VALIDATING_COMMON_PASSWORD_POLICY(
+                "40002",
+                "The new password is vulnerable for security issues since it is a commonly used password. " +
+                        "Please use another password instead."
+        ),
+        ERROR_CODE_VALIDATING_USER_ATTRIBUTE_PASSWORD_POLICY(
+                "40002", "The new password is vulnerable for security issues since it contains user " +
+                "attributes. Please use another password instead."
         );
 
         // Instance variables for the error code and message.
