@@ -29,10 +29,17 @@ mvn clean install
 
 ### Deploy
 
-After a successfully building the project, copy the `org.wso2.carbon.identity.custom.password.policy.handler-1.0.0-SNAPSHOT.jar`
-artifact from the target folder and paste it inside `<IS HOME>/repository/components/dropins` folder.Then, copy
-the `commonpasswords.txt` file from `target/classes` and paste it in `<IS HOME>/repository/deployment/server/commonpasswords` 
-(Note: You should create the directory `commonpasswords` if it does not exist)
+1. After a successfully building the project, copy
+   the `org.wso2.carbon.identity.custom.password.policy.handler-1.0.0-SNAPSHOT.jar`
+   artifact from the target folder and paste it inside `<IS HOME>/repository/components/dropins` folder.
+2. Then, copy the `commonpasswords.txt` file from `target/classes` and paste it
+   in `<IS HOME>/repository/deployment/server/commonpasswords`
+   (Note: You should create the directory `commonpasswords` if it does not exist).
+
+You can add the following to the `<IS HOME>/bin/wso2server.sh` based on your requirement:
+
+- `-DenableCustomPasswordInsert=true \` - If you have inserted new data to the `commonpasswords.txt` file.
+- `-DenableCustomPasswordDelete=true \` - If you want to drop the common password repository on component deactivation.
 
 ## Run
 
