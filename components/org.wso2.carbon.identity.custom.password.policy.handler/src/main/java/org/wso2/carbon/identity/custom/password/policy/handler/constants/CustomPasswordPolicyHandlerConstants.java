@@ -44,16 +44,17 @@ public class CustomPasswordPolicyHandlerConstants {
     public static final boolean CONFIG_ENABLE_CLAIM_BASED_PASSWORD_RESTRICTION_DEFAULT_VALUE = false;
 
     // SQL Queries related to the custom password policy handler component.
+    public static final String TABLE_NAME = "IDN_COMMON_PASSWORD_STORE";
     public static final String CREATE_COMMON_PASSWORD_STORE =
-            "CREATE TABLE IF NOT EXISTS IDN_CMN_PWD (" +
+            "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
                     "PASSWORD VARCHAR(255) NOT NULL," +
                     "PRIMARY KEY (PASSWORD));";
     public static final String INSERT_VALUES_TO_COMMON_PASSWORD_STORE =
-            "REPLACE INTO IDN_CMN_PWD (PASSWORD) VALUES (?);";
+            "REPLACE INTO " + TABLE_NAME + " (PASSWORD) VALUES (?);";
     public static final String SELECT_COMMON_PASSWORDS_LIKE =
-            "SELECT PASSWORD FROM IDN_CMN_PWD WHERE PASSWORD IN (?)";
+            "SELECT PASSWORD FROM " + TABLE_NAME + " WHERE PASSWORD IN (?)";
     public static final String DROP_COMMON_PASSWORD_STORE =
-            "DROP TABLE IF EXISTS IDN_CMN_PWD;";
+            "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
 
     // Common passwords text file location related constants.
     public static final String PASSWORD_FILE_NAME = "commonpasswords.txt";
