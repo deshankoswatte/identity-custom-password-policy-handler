@@ -36,6 +36,7 @@ import org.wso2.carbon.identity.governance.IdentityGovernanceException;
 import org.wso2.carbon.identity.governance.common.IdentityConnectorConfig;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +62,7 @@ public class CustomPasswordPolicyHandler extends AbstractEventHandler implements
                 CustomPasswordPolicyHandlerConstants.CONFIG_ENABLE_COMMON_PASSWORD_RESTRICTION_DEFAULT_VALUE;
         boolean isClaimBasedPasswordRestrictionEnabled =
                 CustomPasswordPolicyHandlerConstants.CONFIG_ENABLE_CLAIM_BASED_PASSWORD_RESTRICTION_DEFAULT_VALUE;
+        List<String> restrictedClaims = CustomPasswordPolicyHandlerConstants.CONFIG_RESTRICTED_CLAIMS_DEFAULT_VALUE;
         for (Property property : identityProperties) {
             if (property.getName().equals(
                     CustomPasswordPolicyHandlerConstants.CONFIG_ENABLE_COMMON_PASSWORD_RESTRICTION)) {
@@ -73,6 +75,11 @@ public class CustomPasswordPolicyHandler extends AbstractEventHandler implements
                 String value = property.getValue();
                 isClaimBasedPasswordRestrictionEnabled = StringUtils.isBlank(value) ?
                         isClaimBasedPasswordRestrictionEnabled : Boolean.parseBoolean(value);
+            }
+            if (property.getName().equals(CustomPasswordPolicyHandlerConstants.CONFIG_RESTRICTED_CLAIMS)) {
+                String value = property.getValue().replaceAll("[\\[\\]]", "");
+                restrictedClaims = StringUtils.isBlank(value) ?
+                        restrictedClaims : Arrays.asList(value.split(", "));
             }
         }
 
@@ -91,9 +98,9 @@ public class CustomPasswordPolicyHandler extends AbstractEventHandler implements
                 }
             }
 
-            if (isClaimBasedPasswordRestrictionEnabled) {
+            if (isClaimBasedPasswordRestrictionEnabled && restrictedClaims.size() > 0) {
                 ClaimBasedPasswordValidator claimBasedPasswordValidator = ClaimBasedPasswordValidator.getInstance();
-                claimBasedPasswordValidator.initializeData(eventProperties, userName);
+                claimBasedPasswordValidator.initializeData(eventProperties, restrictedClaims, userName);
                 if (!claimBasedPasswordValidator.validateCredentials(credential)) {
 
                     throw CustomPasswordPolicyHandlerUtils.handleEventException(
@@ -160,6 +167,10 @@ public class CustomPasswordPolicyHandler extends AbstractEventHandler implements
                 CustomPasswordPolicyHandlerConstants.CONFIG_ENABLE_CLAIM_BASED_PASSWORD_RESTRICTION,
                 CustomPasswordPolicyHandlerConstants.CONFIG_ENABLE_CLAIM_BASED_PASSWORD_RESTRICTION_DISPLAYED_NAME
         );
+        nameMapping.put(
+                CustomPasswordPolicyHandlerConstants.CONFIG_RESTRICTED_CLAIMS,
+                CustomPasswordPolicyHandlerConstants.CONFIG_RESTRICTED_CLAIMS_DISPLAYED_NAME
+        );
 
         return nameMapping;
     }
@@ -176,6 +187,10 @@ public class CustomPasswordPolicyHandler extends AbstractEventHandler implements
                 CustomPasswordPolicyHandlerConstants.CONFIG_ENABLE_CLAIM_BASED_PASSWORD_RESTRICTION,
                 CustomPasswordPolicyHandlerConstants.CONFIG_ENABLE_CLAIM_BASED_PASSWORD_RESTRICTION_DESCRIPTION
         );
+        descriptionMapping.put(
+                CustomPasswordPolicyHandlerConstants.CONFIG_RESTRICTED_CLAIMS,
+                CustomPasswordPolicyHandlerConstants.CONFIG_RESTRICTED_CLAIMS_DESCRIPTION
+        );
 
         return descriptionMapping;
     }
@@ -186,6 +201,7 @@ public class CustomPasswordPolicyHandler extends AbstractEventHandler implements
         List<String> properties = new ArrayList<>();
         properties.add(CustomPasswordPolicyHandlerConstants.CONFIG_ENABLE_COMMON_PASSWORD_RESTRICTION);
         properties.add(CustomPasswordPolicyHandlerConstants.CONFIG_ENABLE_CLAIM_BASED_PASSWORD_RESTRICTION);
+        properties.add(CustomPasswordPolicyHandlerConstants.CONFIG_RESTRICTED_CLAIMS);
 
         return properties.toArray(new String[0]);
     }
@@ -200,6 +216,9 @@ public class CustomPasswordPolicyHandler extends AbstractEventHandler implements
         defaultProperties.put(CustomPasswordPolicyHandlerConstants.CONFIG_ENABLE_CLAIM_BASED_PASSWORD_RESTRICTION,
                 configs.getModuleProperties().getProperty(
                         CustomPasswordPolicyHandlerConstants.CONFIG_ENABLE_CLAIM_BASED_PASSWORD_RESTRICTION));
+        defaultProperties.put(CustomPasswordPolicyHandlerConstants.CONFIG_RESTRICTED_CLAIMS,
+                configs.getModuleProperties().getProperty(
+                        CustomPasswordPolicyHandlerConstants.CONFIG_RESTRICTED_CLAIMS));
 
         Properties properties = new Properties();
         properties.putAll(defaultProperties);

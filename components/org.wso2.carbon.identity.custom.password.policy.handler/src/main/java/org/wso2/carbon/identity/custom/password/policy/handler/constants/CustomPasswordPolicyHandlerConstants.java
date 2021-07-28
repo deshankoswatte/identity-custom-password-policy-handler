@@ -20,6 +20,9 @@ package org.wso2.carbon.identity.custom.password.policy.handler.constants;
 
 import org.wso2.carbon.utils.CarbonUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This class consists of the constants that are used throughout the custom password policy handler component.
  */
@@ -42,6 +45,11 @@ public class CustomPasswordPolicyHandlerConstants {
     public static final String CONFIG_ENABLE_CLAIM_BASED_PASSWORD_RESTRICTION_DESCRIPTION =
             "Enable to restrict the use of claim based passwords.";
     public static final boolean CONFIG_ENABLE_CLAIM_BASED_PASSWORD_RESTRICTION_DEFAULT_VALUE = false;
+    public static final String CONFIG_RESTRICTED_CLAIMS = "customPasswordPolicyHandler.restrictedClaims";
+    public static final String CONFIG_RESTRICTED_CLAIMS_DISPLAYED_NAME = "Restricted Claims";
+    public static final String CONFIG_RESTRICTED_CLAIMS_DESCRIPTION =
+            "Claims which the values are restricted to be used as passwords.";
+    public static final List<String> CONFIG_RESTRICTED_CLAIMS_DEFAULT_VALUE = new ArrayList<>();
 
     // SQL Queries related to the custom password policy handler component.
     public static final String TABLE_NAME = "IDN_COMMON_PASSWORD_STORE";

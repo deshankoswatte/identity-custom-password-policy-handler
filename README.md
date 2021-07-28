@@ -16,6 +16,7 @@ subscriptions =["PRE_UPDATE_CREDENTIAL", "PRE_UPDATE_CREDENTIAL_BY_ADMIN", "PRE_
 [event_handler.properties]
 enableCommonPasswordRestriction = true
 enableClaimBasedPasswordRestriction = true
+restrictedClaims = ["http://wso2.org/claims/username", "http://wso2.org/claims/fullname", ...]
 ```
 
 ### Clone and Build

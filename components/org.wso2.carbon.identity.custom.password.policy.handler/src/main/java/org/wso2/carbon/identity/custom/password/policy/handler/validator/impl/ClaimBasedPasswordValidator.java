@@ -24,6 +24,7 @@ import org.wso2.carbon.identity.event.IdentityEventException;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.core.UserStoreManager;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,6 +33,7 @@ import java.util.Map;
 public class ClaimBasedPasswordValidator implements PasswordValidator {
 
     private Map<String, String> userClaims;
+    private List<String> restrictedClaims;
     private static final ClaimBasedPasswordValidator claimBasedPasswordValidator = new ClaimBasedPasswordValidator();
 
     /**
@@ -54,12 +56,14 @@ public class ClaimBasedPasswordValidator implements PasswordValidator {
     /**
      * Initialize the user claims with the provided arguments.
      *
-     * @param eventProperties Properties belonging to the triggered event.
-     * @param userName        Username of the user.
+     * @param eventProperties  Properties belonging to the triggered event.
+     * @param restrictedClaims Claims which the values are restricted to be used as passwords.
+     * @param userName         Username of the user.
      * @throws IdentityEventException If there is a problem while loading claims.
      */
-    public void initializeData(Map<String, Object> eventProperties, String userName) throws IdentityEventException {
+    public void initializeData(Map<String, Object> eventProperties, List<String> restrictedClaims, String userName) throws IdentityEventException {
 
+        this.restrictedClaims = restrictedClaims;
         UserStoreManager userStoreManager = (UserStoreManager) eventProperties
                 .get(IdentityEventConstants.EventProperty.USER_STORE_MANAGER);
 
@@ -91,7 +95,7 @@ public class ClaimBasedPasswordValidator implements PasswordValidator {
     public boolean validateCredentials(String credential) {
 
         for (Map.Entry<String, String> entry : userClaims.entrySet()) {
-            if (credential.contains(entry.getValue())) {
+            if (restrictedClaims.contains(entry.getKey()) && credential.contains(entry.getValue())) {
                 return false;
             }
         }
