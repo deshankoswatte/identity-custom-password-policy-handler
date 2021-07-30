@@ -18,7 +18,7 @@
 
 package org.wso2.carbon.identity.custom.password.policy.handler.validator.impl;
 
-import org.wso2.carbon.identity.custom.password.policy.handler.validator.PasswordValidator;
+import org.wso2.carbon.identity.custom.password.policy.handler.validator.AbstractPasswordValidator;
 import org.wso2.carbon.identity.event.IdentityEventConstants;
 import org.wso2.carbon.identity.event.IdentityEventException;
 import org.wso2.carbon.user.api.UserStoreException;
@@ -30,16 +30,16 @@ import java.util.Map;
 /**
  * A singleton class to restrict the use of claim based passwords.
  */
-public class ClaimBasedPasswordValidator implements PasswordValidator {
+public class ClaimBasedAbstractPasswordValidator extends AbstractPasswordValidator {
 
     private Map<String, String> userClaims;
     private List<String> restrictedClaims;
-    private static final ClaimBasedPasswordValidator claimBasedPasswordValidator = new ClaimBasedPasswordValidator();
+    private static final ClaimBasedAbstractPasswordValidator claimBasedPasswordValidator = new ClaimBasedAbstractPasswordValidator();
 
     /**
      * Private constructor so this class cannot be instantiated by other classes.
      */
-    private ClaimBasedPasswordValidator() {
+    private ClaimBasedAbstractPasswordValidator() {
 
     }
 
@@ -48,7 +48,7 @@ public class ClaimBasedPasswordValidator implements PasswordValidator {
      *
      * @return An instance of the ClaimBasedPasswordValidator.
      */
-    public static ClaimBasedPasswordValidator getInstance() {
+    public static ClaimBasedAbstractPasswordValidator getInstance() {
 
         return claimBasedPasswordValidator;
     }
@@ -61,7 +61,8 @@ public class ClaimBasedPasswordValidator implements PasswordValidator {
      * @param userName         Username of the user.
      * @throws IdentityEventException If there is a problem while loading claims.
      */
-    public void initializeData(Map<String, Object> eventProperties, List<String> restrictedClaims, String userName) throws IdentityEventException {
+    public void initializeData(Map<String, Object> eventProperties, List<String> restrictedClaims, String userName)
+            throws IdentityEventException {
 
         this.restrictedClaims = restrictedClaims;
         UserStoreManager userStoreManager = (UserStoreManager) eventProperties
@@ -95,7 +96,8 @@ public class ClaimBasedPasswordValidator implements PasswordValidator {
     public boolean validateCredentials(String credential) {
 
         for (Map.Entry<String, String> entry : userClaims.entrySet()) {
-            if (restrictedClaims.contains(entry.getKey()) && credential.contains(entry.getValue())) {
+            if (restrictedClaims.contains(entry.getKey()) &&
+                    (credential.contains(entry.getValue()) || (entry.getValue()).contains(credential))) {
                 return false;
             }
         }

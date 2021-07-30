@@ -37,8 +37,10 @@ mvn clean install
    in `<IS HOME>/repository/deployment/server/commonpasswords`
    (Note: You should create the directory `commonpasswords` if it does not exist).
 
-You can add the following to the `<IS HOME>/bin/wso2server.sh` based on your requirement:
+You can add the following to the `<IS HOME>/bin/wso2server.sh` based on your requirement **(if you want to use the
+DB-based common password validator only)**:
 
+- `-DenableDBBasedCommonPasswordValidator=true \` - If you want to activate the DB-based common password validator.
 - `-DenableCustomPasswordInsert=true \` - If you have inserted new data to the `commonpasswords.txt` file.
 - `-DenableCustomPasswordDelete=true \` - If you want to drop the common password repository on component deactivation.
 

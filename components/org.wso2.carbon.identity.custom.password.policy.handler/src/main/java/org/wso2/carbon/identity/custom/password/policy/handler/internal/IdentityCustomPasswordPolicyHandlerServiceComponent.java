@@ -29,7 +29,8 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.carbon.identity.custom.password.policy.handler.handler.CustomPasswordPolicyHandler;
-import org.wso2.carbon.identity.custom.password.policy.handler.validator.impl.CommonPasswordValidator;
+import org.wso2.carbon.identity.custom.password.policy.handler.validator.impl.DBBasedCommonAbstractPasswordValidator;
+import org.wso2.carbon.identity.custom.password.policy.handler.validator.impl.FileBasedCommonAbstractPasswordValidator;
 import org.wso2.carbon.identity.event.handler.AbstractEventHandler;
 import org.wso2.carbon.identity.governance.IdentityGovernanceService;
 
@@ -56,8 +57,14 @@ public class IdentityCustomPasswordPolicyHandlerServiceComponent {
             CustomPasswordPolicyHandler handler = new CustomPasswordPolicyHandler();
             context.getBundleContext().registerService(AbstractEventHandler.class.getName(), handler, null);
 
-            // Initialize the common password data repository.
-            CommonPasswordValidator.getInstance().initializeData();
+            if (Boolean.parseBoolean(System.getProperty("enableDBBasedCommonPasswordValidator"))) {
+                // Initialize the common password data DB repository.
+                DBBasedCommonAbstractPasswordValidator.getInstance().initializeData();
+            } else {
+                // Initialize the common password data using a file as storage.
+                FileBasedCommonAbstractPasswordValidator.getInstance().initializeData();
+            }
+
         } catch (Exception e) {
             log.error("Error while activating the custom password policy handler service component.", e);
         }
@@ -66,11 +73,13 @@ public class IdentityCustomPasswordPolicyHandlerServiceComponent {
     @Deactivate
     protected void deactivate(ComponentContext context) {
 
-        try {
-            // Destroy the common password data repository.
-            CommonPasswordValidator.getInstance().destroyData();
-        } catch (Exception e) {
-            log.error("Error while deactivating the custom password policy handler service component.", e);
+        if (Boolean.parseBoolean(System.getProperty("enableDBBasedCommonPasswordValidator"))) {
+            try {
+                // Destroy the common password data repository.
+                DBBasedCommonAbstractPasswordValidator.getInstance().destroyData();
+            } catch (Exception e) {
+                log.error("Error while deactivating the custom password policy handler service component.", e);
+            }
         }
 
         if (log.isDebugEnabled()) {

@@ -26,8 +26,9 @@ import org.wso2.carbon.identity.core.handler.InitConfig;
 import org.wso2.carbon.identity.custom.password.policy.handler.constants.CustomPasswordPolicyHandlerConstants;
 import org.wso2.carbon.identity.custom.password.policy.handler.internal.IdentityCustomPasswordPolicyHandlerServiceDataHolder;
 import org.wso2.carbon.identity.custom.password.policy.handler.util.CustomPasswordPolicyHandlerUtils;
-import org.wso2.carbon.identity.custom.password.policy.handler.validator.impl.ClaimBasedPasswordValidator;
-import org.wso2.carbon.identity.custom.password.policy.handler.validator.impl.CommonPasswordValidator;
+import org.wso2.carbon.identity.custom.password.policy.handler.validator.impl.ClaimBasedAbstractPasswordValidator;
+import org.wso2.carbon.identity.custom.password.policy.handler.validator.impl.DBBasedCommonAbstractPasswordValidator;
+import org.wso2.carbon.identity.custom.password.policy.handler.validator.impl.FileBasedCommonAbstractPasswordValidator;
 import org.wso2.carbon.identity.event.IdentityEventConstants;
 import org.wso2.carbon.identity.event.IdentityEventException;
 import org.wso2.carbon.identity.event.event.Event;
@@ -90,16 +91,25 @@ public class CustomPasswordPolicyHandler extends AbstractEventHandler implements
             String credential = rawCredential instanceof StringBuffer ? rawCredential.toString() : (String) rawCredential;
 
             if (isCommonPasswordRestrictionEnabled) {
-                if (!CommonPasswordValidator.getInstance().validateCredentials(credential)) {
+                if (Boolean.parseBoolean(System.getProperty("enableDBBasedCommonPasswordValidator"))) {
+                    if (!DBBasedCommonAbstractPasswordValidator.getInstance().validateCredentials(credential)) {
 
-                    throw CustomPasswordPolicyHandlerUtils.handleEventException(
-                            CustomPasswordPolicyHandlerConstants.ErrorMessages.ERROR_CODE_VALIDATING_COMMON_PASSWORD_POLICY, null
-                    );
+                        throw CustomPasswordPolicyHandlerUtils.handleEventException(
+                                CustomPasswordPolicyHandlerConstants.ErrorMessages.ERROR_CODE_VALIDATING_COMMON_PASSWORD_POLICY, null
+                        );
+                    }
+                } else {
+                    if (!FileBasedCommonAbstractPasswordValidator.getInstance().validateCredentials(credential)) {
+
+                        throw CustomPasswordPolicyHandlerUtils.handleEventException(
+                                CustomPasswordPolicyHandlerConstants.ErrorMessages.ERROR_CODE_VALIDATING_COMMON_PASSWORD_POLICY, null
+                        );
+                    }
                 }
             }
 
             if (isClaimBasedPasswordRestrictionEnabled && restrictedClaims.size() > 0) {
-                ClaimBasedPasswordValidator claimBasedPasswordValidator = ClaimBasedPasswordValidator.getInstance();
+                ClaimBasedAbstractPasswordValidator claimBasedPasswordValidator = ClaimBasedAbstractPasswordValidator.getInstance();
                 claimBasedPasswordValidator.initializeData(eventProperties, restrictedClaims, userName);
                 if (!claimBasedPasswordValidator.validateCredentials(credential)) {
 

@@ -60,7 +60,7 @@ public class CustomPasswordPolicyHandlerConstants {
     public static final String INSERT_VALUES_TO_COMMON_PASSWORD_STORE =
             "REPLACE INTO " + TABLE_NAME + " (PASSWORD) VALUES (?);";
     public static final String SELECT_COMMON_PASSWORDS_LIKE =
-            "SELECT PASSWORD FROM " + TABLE_NAME + " WHERE PASSWORD IN (?)";
+            "SELECT PASSWORD FROM " + TABLE_NAME + " WHERE PASSWORD LIKE ?";
     public static final String DROP_COMMON_PASSWORD_STORE =
             "DROP TABLE IF EXISTS " + TABLE_NAME + ";";
 

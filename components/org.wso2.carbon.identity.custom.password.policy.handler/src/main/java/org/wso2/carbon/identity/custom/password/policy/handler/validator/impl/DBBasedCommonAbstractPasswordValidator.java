@@ -18,11 +18,10 @@
 
 package org.wso2.carbon.identity.custom.password.policy.handler.validator.impl;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
 import org.wso2.carbon.identity.custom.password.policy.handler.constants.CustomPasswordPolicyHandlerConstants;
 import org.wso2.carbon.identity.custom.password.policy.handler.exception.CustomPasswordPolicyHandlerException;
-import org.wso2.carbon.identity.custom.password.policy.handler.validator.PasswordValidator;
+import org.wso2.carbon.identity.custom.password.policy.handler.validator.AbstractPasswordValidator;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -33,27 +32,27 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * A singleton class to restrict the use of common passwords.
+ * A singleton class to restrict the use of common passwords based on a DB.
  */
-public class CommonPasswordValidator implements PasswordValidator {
+public class DBBasedCommonAbstractPasswordValidator extends AbstractPasswordValidator {
 
-    private static final CommonPasswordValidator commonPasswordValidator = new CommonPasswordValidator();
+    private static final DBBasedCommonAbstractPasswordValidator dbBasedCommonPasswordValidator = new DBBasedCommonAbstractPasswordValidator();
 
     /**
      * Private constructor so this class cannot be instantiated by other classes.
      */
-    private CommonPasswordValidator() {
+    private DBBasedCommonAbstractPasswordValidator() {
 
     }
 
     /**
-     * Retrieve the singleton instance of the CommonPasswordValidator.
+     * Retrieve the singleton instance of the DBBasedCommonPasswordValidator.
      *
-     * @return An instance of the CommonPasswordValidator.
+     * @return An instance of the DBBasedCommonPasswordValidator.
      */
-    public static CommonPasswordValidator getInstance() {
+    public static DBBasedCommonAbstractPasswordValidator getInstance() {
 
-        return commonPasswordValidator;
+        return dbBasedCommonPasswordValidator;
     }
 
     /**
@@ -120,8 +119,7 @@ public class CommonPasswordValidator implements PasswordValidator {
             ));
             while ((password = bufferedReader.readLine()) != null) {
 
-                String passwordMd5 = DigestUtils.md5Hex(password).toUpperCase();
-                prepStmtIns.setString(1, passwordMd5);
+                prepStmtIns.setString(1, password);
                 prepStmtIns.addBatch();
             }
             prepStmtIns.executeBatch();
@@ -147,14 +145,13 @@ public class CommonPasswordValidator implements PasswordValidator {
     @Override
     public boolean validateCredentials(String credential) {
 
-        String credentialMd5 = DigestUtils.md5Hex(credential).toUpperCase();
         PreparedStatement prepStmtCheck = null;
         Connection connection = IdentityDatabaseUtil.getDBConnection(true);
         try {
             prepStmtCheck = connection.prepareStatement(
                     CustomPasswordPolicyHandlerConstants.SELECT_COMMON_PASSWORDS_LIKE
             );
-            prepStmtCheck.setString(1, credentialMd5);
+            prepStmtCheck.setString(1, ("%" + credential + "%"));
 
             ResultSet resultSet = prepStmtCheck.executeQuery();
             return !resultSet.next();
