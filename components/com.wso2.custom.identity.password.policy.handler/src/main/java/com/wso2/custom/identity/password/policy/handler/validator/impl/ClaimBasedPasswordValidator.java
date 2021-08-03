@@ -1,24 +1,6 @@
-/*
- *  Copyright (c) 2021, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing,
- *  software distributed under the License is distributed on an
- *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *  KIND, either express or implied.  See the License for the
- *  specific language governing permissions and limitations
- *  under the License.
- */
+package com.wso2.custom.identity.password.policy.handler.validator.impl;
 
-package org.wso2.carbon.identity.custom.password.policy.handler.validator.impl;
-
-import org.wso2.carbon.identity.custom.password.policy.handler.validator.AbstractPasswordValidator;
+import com.wso2.custom.identity.password.policy.handler.validator.AbstractPasswordValidator;
 import org.wso2.carbon.identity.event.IdentityEventConstants;
 import org.wso2.carbon.identity.event.IdentityEventException;
 import org.wso2.carbon.user.api.UserStoreException;
@@ -30,16 +12,16 @@ import java.util.Map;
 /**
  * A singleton class to restrict the use of claim based passwords.
  */
-public class ClaimBasedAbstractPasswordValidator extends AbstractPasswordValidator {
+public class ClaimBasedPasswordValidator extends AbstractPasswordValidator {
 
     private Map<String, String> userClaims;
     private List<String> restrictedClaims;
-    private static final ClaimBasedAbstractPasswordValidator claimBasedPasswordValidator = new ClaimBasedAbstractPasswordValidator();
+    private static final ClaimBasedPasswordValidator claimBasedPasswordValidator = new ClaimBasedPasswordValidator();
 
     /**
      * Private constructor so this class cannot be instantiated by other classes.
      */
-    private ClaimBasedAbstractPasswordValidator() {
+    private ClaimBasedPasswordValidator() {
 
     }
 
@@ -48,7 +30,7 @@ public class ClaimBasedAbstractPasswordValidator extends AbstractPasswordValidat
      *
      * @return An instance of the ClaimBasedPasswordValidator.
      */
-    public static ClaimBasedAbstractPasswordValidator getInstance() {
+    public static ClaimBasedPasswordValidator getInstance() {
 
         return claimBasedPasswordValidator;
     }

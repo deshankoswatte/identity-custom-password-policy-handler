@@ -1,27 +1,9 @@
-/*
- *  Copyright (c) 2021, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing,
- *  software distributed under the License is distributed on an
- *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *  KIND, either express or implied.  See the License for the
- *  specific language governing permissions and limitations
- *  under the License.
- */
+package com.wso2.custom.identity.password.policy.handler.validator.impl;
 
-package org.wso2.carbon.identity.custom.password.policy.handler.validator.impl;
-
+import com.wso2.custom.identity.password.policy.handler.validator.AbstractPasswordValidator;
 import org.wso2.carbon.identity.core.util.IdentityDatabaseUtil;
-import org.wso2.carbon.identity.custom.password.policy.handler.constants.CustomPasswordPolicyHandlerConstants;
-import org.wso2.carbon.identity.custom.password.policy.handler.exception.CustomPasswordPolicyHandlerException;
-import org.wso2.carbon.identity.custom.password.policy.handler.validator.AbstractPasswordValidator;
+import com.wso2.custom.identity.password.policy.handler.constants.CustomPasswordPolicyHandlerConstants;
+import com.wso2.custom.identity.password.policy.handler.exception.CustomPasswordPolicyHandlerException;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -34,14 +16,14 @@ import java.sql.SQLException;
 /**
  * A singleton class to restrict the use of common passwords based on a DB.
  */
-public class DBBasedCommonAbstractPasswordValidator extends AbstractPasswordValidator {
+public class DBBasedCommonPasswordValidator extends AbstractPasswordValidator {
 
-    private static final DBBasedCommonAbstractPasswordValidator dbBasedCommonPasswordValidator = new DBBasedCommonAbstractPasswordValidator();
+    private static final DBBasedCommonPasswordValidator dbBasedCommonPasswordValidator = new DBBasedCommonPasswordValidator();
 
     /**
      * Private constructor so this class cannot be instantiated by other classes.
      */
-    private DBBasedCommonAbstractPasswordValidator() {
+    private DBBasedCommonPasswordValidator() {
 
     }
 
@@ -50,7 +32,7 @@ public class DBBasedCommonAbstractPasswordValidator extends AbstractPasswordVali
      *
      * @return An instance of the DBBasedCommonPasswordValidator.
      */
-    public static DBBasedCommonAbstractPasswordValidator getInstance() {
+    public static DBBasedCommonPasswordValidator getInstance() {
 
         return dbBasedCommonPasswordValidator;
     }

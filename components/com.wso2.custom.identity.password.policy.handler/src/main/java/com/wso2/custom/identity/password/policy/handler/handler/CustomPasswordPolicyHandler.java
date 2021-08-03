@@ -1,34 +1,16 @@
-/*
- *  Copyright (c) 2021, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing,
- *  software distributed under the License is distributed on an
- *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *  KIND, either express or implied.  See the License for the
- *  specific language governing permissions and limitations
- *  under the License.
- */
+package com.wso2.custom.identity.password.policy.handler.handler;
 
-package org.wso2.carbon.identity.custom.password.policy.handler.handler;
-
+import com.wso2.custom.identity.password.policy.handler.constants.CustomPasswordPolicyHandlerConstants;
+import com.wso2.custom.identity.password.policy.handler.internal.IdentityCustomPasswordPolicyHandlerServiceDataHolder;
+import com.wso2.custom.identity.password.policy.handler.util.CustomPasswordPolicyHandlerUtils;
+import com.wso2.custom.identity.password.policy.handler.validator.impl.ClaimBasedPasswordValidator;
+import com.wso2.custom.identity.password.policy.handler.validator.impl.DBBasedCommonPasswordValidator;
+import com.wso2.custom.identity.password.policy.handler.validator.impl.FileBasedCommonPasswordValidator;
 import org.apache.commons.lang.StringUtils;
 import org.wso2.carbon.identity.application.common.model.Property;
 import org.wso2.carbon.identity.base.IdentityRuntimeException;
 import org.wso2.carbon.identity.core.bean.context.MessageContext;
 import org.wso2.carbon.identity.core.handler.InitConfig;
-import org.wso2.carbon.identity.custom.password.policy.handler.constants.CustomPasswordPolicyHandlerConstants;
-import org.wso2.carbon.identity.custom.password.policy.handler.internal.IdentityCustomPasswordPolicyHandlerServiceDataHolder;
-import org.wso2.carbon.identity.custom.password.policy.handler.util.CustomPasswordPolicyHandlerUtils;
-import org.wso2.carbon.identity.custom.password.policy.handler.validator.impl.ClaimBasedAbstractPasswordValidator;
-import org.wso2.carbon.identity.custom.password.policy.handler.validator.impl.DBBasedCommonAbstractPasswordValidator;
-import org.wso2.carbon.identity.custom.password.policy.handler.validator.impl.FileBasedCommonAbstractPasswordValidator;
 import org.wso2.carbon.identity.event.IdentityEventConstants;
 import org.wso2.carbon.identity.event.IdentityEventException;
 import org.wso2.carbon.identity.event.event.Event;
@@ -92,14 +74,14 @@ public class CustomPasswordPolicyHandler extends AbstractEventHandler implements
 
             if (isCommonPasswordRestrictionEnabled) {
                 if (Boolean.parseBoolean(System.getProperty("enableDBBasedCommonPasswordValidator"))) {
-                    if (!DBBasedCommonAbstractPasswordValidator.getInstance().validateCredentials(credential)) {
+                    if (!DBBasedCommonPasswordValidator.getInstance().validateCredentials(credential)) {
 
                         throw CustomPasswordPolicyHandlerUtils.handleEventException(
                                 CustomPasswordPolicyHandlerConstants.ErrorMessages.ERROR_CODE_VALIDATING_COMMON_PASSWORD_POLICY, null
                         );
                     }
                 } else {
-                    if (!FileBasedCommonAbstractPasswordValidator.getInstance().validateCredentials(credential)) {
+                    if (!FileBasedCommonPasswordValidator.getInstance().validateCredentials(credential)) {
 
                         throw CustomPasswordPolicyHandlerUtils.handleEventException(
                                 CustomPasswordPolicyHandlerConstants.ErrorMessages.ERROR_CODE_VALIDATING_COMMON_PASSWORD_POLICY, null
@@ -109,7 +91,7 @@ public class CustomPasswordPolicyHandler extends AbstractEventHandler implements
             }
 
             if (isClaimBasedPasswordRestrictionEnabled && restrictedClaims.size() > 0) {
-                ClaimBasedAbstractPasswordValidator claimBasedPasswordValidator = ClaimBasedAbstractPasswordValidator.getInstance();
+                ClaimBasedPasswordValidator claimBasedPasswordValidator = ClaimBasedPasswordValidator.getInstance();
                 claimBasedPasswordValidator.initializeData(eventProperties, restrictedClaims, userName);
                 if (!claimBasedPasswordValidator.validateCredentials(credential)) {
 
@@ -217,7 +199,7 @@ public class CustomPasswordPolicyHandler extends AbstractEventHandler implements
     }
 
     @Override
-    public Properties getDefaultPropertyValues(String tenantDomain) throws IdentityGovernanceException {
+    public Properties getDefaultPropertyValues(String tenantDomain) {
 
         Map<String, String> defaultProperties = new HashMap<>();
         defaultProperties.put(CustomPasswordPolicyHandlerConstants.CONFIG_ENABLE_COMMON_PASSWORD_RESTRICTION,
@@ -237,7 +219,7 @@ public class CustomPasswordPolicyHandler extends AbstractEventHandler implements
     }
 
     @Override
-    public Map<String, String> getDefaultPropertyValues(String[] strings, String s) throws IdentityGovernanceException {
+    public Map<String, String> getDefaultPropertyValues(String[] strings, String s) {
 
         return null;
     }

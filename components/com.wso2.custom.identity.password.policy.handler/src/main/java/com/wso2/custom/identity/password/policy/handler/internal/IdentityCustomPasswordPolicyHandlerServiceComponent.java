@@ -1,23 +1,6 @@
-/*
- *  Copyright (c) 2021, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing,
- *  software distributed under the License is distributed on an
- *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *  KIND, either express or implied.  See the License for the
- *  specific language governing permissions and limitations
- *  under the License.
- */
+package com.wso2.custom.identity.password.policy.handler.internal;
 
-package org.wso2.carbon.identity.custom.password.policy.handler.internal;
-
+import com.wso2.custom.identity.password.policy.handler.validator.impl.DBBasedCommonPasswordValidator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
@@ -28,9 +11,8 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
-import org.wso2.carbon.identity.custom.password.policy.handler.handler.CustomPasswordPolicyHandler;
-import org.wso2.carbon.identity.custom.password.policy.handler.validator.impl.DBBasedCommonAbstractPasswordValidator;
-import org.wso2.carbon.identity.custom.password.policy.handler.validator.impl.FileBasedCommonAbstractPasswordValidator;
+import com.wso2.custom.identity.password.policy.handler.handler.CustomPasswordPolicyHandler;
+import com.wso2.custom.identity.password.policy.handler.validator.impl.FileBasedCommonPasswordValidator;
 import org.wso2.carbon.identity.event.handler.AbstractEventHandler;
 import org.wso2.carbon.identity.governance.IdentityGovernanceService;
 
@@ -38,7 +20,7 @@ import org.wso2.carbon.identity.governance.IdentityGovernanceService;
  * OSGi service component which registers the custom password policy event handler and sets the bundle context.
  */
 @Component(
-        name = "org.wso2.carbon.identity.custom.password.policy.handler.internal.IdentityCustomPasswordPolicyServiceComponent",
+        name = "com.wso2.custom.identity.password.policy.handler.internal.IdentityCustomPasswordPolicyServiceComponent",
         immediate = true)
 public class IdentityCustomPasswordPolicyHandlerServiceComponent {
 
@@ -59,14 +41,14 @@ public class IdentityCustomPasswordPolicyHandlerServiceComponent {
 
             if (Boolean.parseBoolean(System.getProperty("enableDBBasedCommonPasswordValidator"))) {
                 // Initialize the common password data DB repository.
-                DBBasedCommonAbstractPasswordValidator.getInstance().initializeData();
+                DBBasedCommonPasswordValidator.getInstance().initializeData();
             } else {
                 // Initialize the common password data using a file as storage.
-                FileBasedCommonAbstractPasswordValidator.getInstance().initializeData();
+                FileBasedCommonPasswordValidator.getInstance().initializeData();
             }
 
-        } catch (Exception e) {
-            log.error("Error while activating the custom password policy handler service component.", e);
+        } catch (Throwable throwable) {
+            log.error("Error while activating the custom password policy handler service component.", throwable);
         }
     }
 
@@ -76,9 +58,9 @@ public class IdentityCustomPasswordPolicyHandlerServiceComponent {
         if (Boolean.parseBoolean(System.getProperty("enableDBBasedCommonPasswordValidator"))) {
             try {
                 // Destroy the common password data repository.
-                DBBasedCommonAbstractPasswordValidator.getInstance().destroyData();
-            } catch (Exception e) {
-                log.error("Error while deactivating the custom password policy handler service component.", e);
+                DBBasedCommonPasswordValidator.getInstance().destroyData();
+            } catch (Throwable throwable) {
+                log.error("Error while deactivating the custom password policy handler service component.", throwable);
             }
         }
 
