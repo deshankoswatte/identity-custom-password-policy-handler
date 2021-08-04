@@ -57,6 +57,10 @@ public class CustomPasswordPolicyHandlerConstants {
      */
     public enum ErrorMessages {
 
+        // General error codes.
+        ERROR_CODE_USERNAME_OR_PASSWORD_NOT_FOUND(
+                "40002", "The username or the updated credential could not be found."
+        ),
         // Error code enforced when the password either contains a common password or a user claim.
         ERROR_CODE_VALIDATING_COMMON_PASSWORD_POLICY(
                 "40002",

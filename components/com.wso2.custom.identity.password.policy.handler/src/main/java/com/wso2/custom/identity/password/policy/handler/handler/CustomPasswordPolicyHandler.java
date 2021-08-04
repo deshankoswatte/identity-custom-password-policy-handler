@@ -7,6 +7,7 @@ import com.wso2.custom.identity.password.policy.handler.validator.impl.ClaimBase
 import com.wso2.custom.identity.password.policy.handler.validator.impl.DBBasedCommonPasswordValidator;
 import com.wso2.custom.identity.password.policy.handler.validator.impl.FileBasedCommonPasswordValidator;
 import org.apache.commons.lang.StringUtils;
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.identity.application.common.model.Property;
 import org.wso2.carbon.identity.base.IdentityRuntimeException;
 import org.wso2.carbon.identity.core.bean.context.MessageContext;
@@ -32,7 +33,11 @@ public class CustomPasswordPolicyHandler extends AbstractEventHandler implements
 
         Map<String, Object> eventProperties = event.getEventProperties();
 
-        String tenantDomain = (String) eventProperties.get(IdentityEventConstants.EventProperty.TENANT_DOMAIN);
+        String tenantDomain = eventProperties.get(IdentityEventConstants.EventProperty.TENANT_DOMAIN) == null ? null :
+                (String) eventProperties.get(IdentityEventConstants.EventProperty.TENANT_DOMAIN);
+        if (StringUtils.isBlank(tenantDomain)) {
+            tenantDomain = MultitenantConstants.SUPER_TENANT_DOMAIN_NAME;
+        }
         Property[] identityProperties;
         try {
             identityProperties = IdentityCustomPasswordPolicyHandlerServiceDataHolder.getInstance()
@@ -68,8 +73,14 @@ public class CustomPasswordPolicyHandler extends AbstractEventHandler implements
 
         if (isCommonPasswordRestrictionEnabled | isClaimBasedPasswordRestrictionEnabled) {
 
-            String userName = (String) eventProperties.get(IdentityEventConstants.EventProperty.USER_NAME);
+            String userName = eventProperties.get(IdentityEventConstants.EventProperty.USER_NAME) == null ? null :
+                    (String) eventProperties.get(IdentityEventConstants.EventProperty.USER_NAME);
             Object rawCredential = eventProperties.get(IdentityEventConstants.EventProperty.CREDENTIAL);
+            if (StringUtils.isBlank(userName) || rawCredential == null) {
+                throw CustomPasswordPolicyHandlerUtils.handleEventException(
+                        CustomPasswordPolicyHandlerConstants.ErrorMessages.ERROR_CODE_USERNAME_OR_PASSWORD_NOT_FOUND, null
+                );
+            }
             String credential = rawCredential instanceof StringBuffer ? rawCredential.toString() : (String) rawCredential;
 
             if (isCommonPasswordRestrictionEnabled) {

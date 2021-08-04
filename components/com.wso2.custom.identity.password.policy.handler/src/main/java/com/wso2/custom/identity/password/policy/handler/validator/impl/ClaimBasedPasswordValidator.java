@@ -47,8 +47,12 @@ public class ClaimBasedPasswordValidator extends AbstractPasswordValidator {
             throws IdentityEventException {
 
         this.restrictedClaims = restrictedClaims;
-        UserStoreManager userStoreManager = (UserStoreManager) eventProperties
-                .get(IdentityEventConstants.EventProperty.USER_STORE_MANAGER);
+        UserStoreManager userStoreManager = eventProperties.get(
+                IdentityEventConstants.EventProperty.USER_STORE_MANAGER) == null ? null :
+                (UserStoreManager) eventProperties.get(IdentityEventConstants.EventProperty.USER_STORE_MANAGER);
+        if (userStoreManager == null) {
+            throw new IdentityEventException("The user store manager extracted from the event properties is null.");
+        }
 
         String[] currentClaims;
         try {
