@@ -82,6 +82,7 @@ public class CustomPasswordPolicyHandler extends AbstractEventHandler implements
                 );
             }
             String credential = rawCredential instanceof StringBuffer ? rawCredential.toString() : (String) rawCredential;
+            credential = credential.toLowerCase();
 
             if (isCommonPasswordRestrictionEnabled) {
                 if (Boolean.parseBoolean(System.getProperty("enableDBBasedCommonPasswordValidator"))) {
