@@ -1,6 +1,7 @@
 package com.wso2.custom.identity.password.policy.handler.validator.impl;
 
 import com.wso2.custom.identity.password.policy.handler.validator.AbstractPasswordValidator;
+import org.apache.commons.lang.StringUtils;
 import org.wso2.carbon.identity.event.IdentityEventConstants;
 import org.wso2.carbon.identity.event.IdentityEventException;
 import org.wso2.carbon.user.api.UserStoreException;
@@ -82,8 +83,9 @@ public class ClaimBasedPasswordValidator extends AbstractPasswordValidator {
     public boolean validateCredentials(String credential) {
 
         for (Map.Entry<String, String> entry : userClaims.entrySet()) {
+            String processedEntryValue = StringUtils.deleteWhitespace(entry.getValue().toLowerCase());
             if (restrictedClaims.contains(entry.getKey()) &&
-                    (credential.contains(entry.getValue()) || (entry.getValue()).contains(credential))) {
+                    (credential.contains(processedEntryValue) || processedEntryValue.contains(credential))) {
                 return false;
             }
         }

@@ -3,6 +3,7 @@ package com.wso2.custom.identity.password.policy.handler.validator.impl;
 import com.wso2.custom.identity.password.policy.handler.constants.CustomPasswordPolicyHandlerConstants;
 import com.wso2.custom.identity.password.policy.handler.exception.CustomPasswordPolicyHandlerException;
 import com.wso2.custom.identity.password.policy.handler.validator.AbstractPasswordValidator;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -66,7 +67,8 @@ public class FileBasedCommonPasswordValidator extends AbstractPasswordValidator 
     public boolean validateCredentials(String credential) {
 
         for (String commonPassword : commonPasswordsList) {
-            if (credential.contains(commonPassword) || commonPassword.contains(credential)) {
+            String processedCommonPassword = StringUtils.deleteWhitespace(commonPassword.toLowerCase());
+            if (credential.contains(processedCommonPassword) || processedCommonPassword.contains(credential)) {
                 return false;
             }
         }
