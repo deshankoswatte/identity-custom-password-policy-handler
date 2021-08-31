@@ -1,0 +1,32 @@
+<FindBugsFilter>
+    <Match>
+        <Bug pattern="CRLF_INJECTION_LOGS"/>
+    </Match>
+    <Match>
+        <Bug pattern="FORMAT_STRING_MANIPULATION"/>
+    </Match>
+    <Match>
+        <Bug pattern="JAXRS_ENDPOINT"/>
+    </Match>
+    <Match>
+        <Bug pattern="IMPROPER_UNICODE"/>
+    </Match>
+    <FindBugsFilter>
+        <Match>
+            <Class name="com.wso2.password.policy.handler.PasswordPolicyHandler"/>
+            <Bug pattern="HARD_CODE_PASSWORD"/>
+        </Match>
+    </FindBugsFilter>
+    <FindBugsFilter>
+        <Match>
+            <Class name="com.wso2.password.policy.handler.validator.impl.FileBasedCommonPasswordValidator"/>
+            <Bug pattern="PATH_TRAVERSAL_IN"/>
+        </Match>
+    </FindBugsFilter>
+    <FindBugsFilter>
+        <Match>
+            <Class name="com.wso2.password.policy.handler.validator.impl.DBBasedCommonPasswordValidator"/>
+            <Bug pattern="PATH_TRAVERSAL_IN"/>
+        </Match>
+    </FindBugsFilter>
+</FindBugsFilter>
