@@ -55,41 +55,41 @@ public class Constants {
 
         // General error codes.
         ERROR_CODE_USERNAME_OR_PASSWORD_NOT_FOUND(
-                "40001", "The username or the updated credential could not be found."
+                "40002", "The username or the updated credential could not be found."
         ),
         ERROR_READING_FROM_COMMON_PASSWORDS_FILE(
                 "40002", "An error occurred while reading the common password data from the text file."
         ),
         ERROR_INITIALIZING_COMMON_PASSWORDS_REPOSITORY(
-                "40003", "An error occurred while initializing the common password data repository."
+                "40002", "An error occurred while initializing the common password data repository."
         ),
         ERROR_ADDING_COMMON_PASSWORDS_TO_DB(
-                "40004", "An error occurred while adding the common password data to the DB table."
+                "40002", "An error occurred while adding the common password data to the DB table."
         ),
         ERROR_REMOVING_COMMON_PASSWORDS_FROM_DB(
-                "40005",
+                "40002",
                 "An error occurred while removing the common password repository data from the database."
         ),
         ERROR_EMPTY_USER_STORE_MANAGER(
-                "40006",
+                "40002",
                 "The user store manager is empty."
         ),
         ERROR_RETRIEVING_CLAIM_URIS(
-                "40007",
+                "40002",
                 "An error occurred while retrieving the claim uris."
         ),
         ERROR_RETRIEVING_USER_CLAIMS(
-                "40008",
+                "40002",
                 "An error occurred while retrieving the user claims."
         ),
         // Error code enforced when the password either contains a common password or a user claim.
         ERROR_CODE_VALIDATING_COMMON_PASSWORD_POLICY(
-                "40009",
+                "40002",
                 "The new password is vulnerable for security issues since it is a commonly used password. " +
                         "Please use another password instead."
         ),
         ERROR_CODE_VALIDATING_USER_ATTRIBUTE_PASSWORD_POLICY(
-                "40010", "The new password is vulnerable for security issues since it contains user " +
+                "40002", "The new password is vulnerable for security issues since it contains user " +
                 "attributes. Please use another password instead."
         );
 

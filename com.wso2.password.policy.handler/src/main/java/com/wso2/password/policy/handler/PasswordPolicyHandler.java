@@ -113,7 +113,7 @@ public class PasswordPolicyHandler extends AbstractEventHandler implements Ident
                 }
             }
 
-            if (isClaimBasedPasswordRestrictionEnabled && restrictedClaims.isEmpty()) {
+            if (isClaimBasedPasswordRestrictionEnabled && !restrictedClaims.isEmpty()) {
                 ClaimBasedPasswordValidator claimBasedPasswordValidator = ClaimBasedPasswordValidator.getInstance();
                 try {
                     claimBasedPasswordValidator.initializeData(eventProperties, restrictedClaims, userName);
