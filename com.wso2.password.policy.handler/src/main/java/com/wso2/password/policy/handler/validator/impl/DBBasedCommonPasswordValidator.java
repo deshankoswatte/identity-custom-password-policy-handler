@@ -47,7 +47,7 @@ public class DBBasedCommonPasswordValidator extends AbstractPasswordValidator {
      * Initialize the repository/database with the common password records.
      *
      * @throws WSO2Exception If there is an error while creating a table to store the common
-     *                       passwords.
+     *                       passwords or while adding common passwords to the table.
      */
     @Override
     public void initializeData() throws WSO2Exception {
@@ -157,6 +157,10 @@ public class DBBasedCommonPasswordValidator extends AbstractPasswordValidator {
             prepStmtCheck.setString(1, ("%" + credential + "%"));
 
             resultSet = prepStmtCheck.executeQuery();
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("A match exists in the database: %b", !resultSet.next()));
+            }
+
             return !resultSet.next();
         } catch (SQLException exception) {
             IdentityDatabaseUtil.rollbackTransaction(connection);

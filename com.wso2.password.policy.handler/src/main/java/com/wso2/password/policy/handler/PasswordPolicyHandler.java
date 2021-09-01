@@ -1,6 +1,7 @@
 package com.wso2.password.policy.handler;
 
 import com.wso2.common.constant.Constants;
+import com.wso2.common.exception.WSO2Exception;
 import com.wso2.password.policy.handler.internal.WSO2PasswordPolicyHandlerMgtDataHolder;
 import com.wso2.password.policy.handler.util.PasswordPolicyHandlerUtils;
 import com.wso2.password.policy.handler.validator.impl.ClaimBasedPasswordValidator;
@@ -31,6 +32,12 @@ import java.util.Properties;
  */
 public class PasswordPolicyHandler extends AbstractEventHandler implements IdentityConnectorConfig {
 
+    /**
+     * Handles the password update event which is captured by this handler.
+     *
+     * @param event The password update event which has been captured by the handler.
+     * @throws IdentityEventException If there is an error while handling the captured password update event.
+     */
     @Override
     public void handleEvent(Event event) throws IdentityEventException {
 
@@ -46,7 +53,7 @@ public class PasswordPolicyHandler extends AbstractEventHandler implements Ident
             identityProperties = WSO2PasswordPolicyHandlerMgtDataHolder.getInstance()
                     .getIdentityGovernanceService().getConfiguration(getPropertyNames(), tenantDomain);
         } catch (IdentityGovernanceException e) {
-            throw new IdentityEventException("Error while retrieving password policy properties.", e);
+            throw new IdentityEventException("An error occurred while retrieving password policy properties.", e);
         }
 
         boolean isCommonPasswordRestrictionEnabled =
@@ -108,7 +115,11 @@ public class PasswordPolicyHandler extends AbstractEventHandler implements Ident
 
             if (isClaimBasedPasswordRestrictionEnabled && restrictedClaims.isEmpty()) {
                 ClaimBasedPasswordValidator claimBasedPasswordValidator = ClaimBasedPasswordValidator.getInstance();
-                claimBasedPasswordValidator.initializeData(eventProperties, restrictedClaims, userName);
+                try {
+                    claimBasedPasswordValidator.initializeData(eventProperties, restrictedClaims, userName);
+                } catch (WSO2Exception e) {
+                    throw new IdentityEventException(e.getErrorCode(), e.getMessage(), e);
+                }
                 if (!claimBasedPasswordValidator.validateCredentials(credential)) {
 
                     throw PasswordPolicyHandlerUtils.handleEventException(
@@ -119,6 +130,11 @@ public class PasswordPolicyHandler extends AbstractEventHandler implements Ident
         }
     }
 
+    /**
+     * Initializes the configurations required for the event handler.
+     *
+     * @param configuration Initialization configuration.
+     */
     @Override
     public void init(InitConfig configuration) {
 
@@ -127,42 +143,78 @@ public class PasswordPolicyHandler extends AbstractEventHandler implements Ident
                 (IdentityConnectorConfig.class.getName(), this, null);
     }
 
+    /**
+     * Retrieves the name of the event handler.
+     *
+     * @return Name of the event handler.
+     */
     @Override
     public String getName() {
 
         return "customPasswordPolicyHandler";
     }
 
+    /**
+     * Retrieves the priority of the event handler.
+     *
+     * @param messageContext The message context.
+     * @return Priority of the event handler.
+     */
     @Override
     public int getPriority(MessageContext messageContext) {
 
         return 50;
     }
 
+    /**
+     * Retrieves the friendly name of the connector configuration.
+     *
+     * @return Friendly name of the connector configuration.
+     */
     @Override
     public String getFriendlyName() {
 
         return "Password Validator";
     }
 
+    /**
+     * Retrieves the category of the connector configuration.
+     *
+     * @return Category of the connector configuration.
+     */
     @Override
     public String getCategory() {
 
         return "Custom Password Policy Handler";
     }
 
+    /**
+     * Retrieves the sub category of the connector configuration.
+     *
+     * @return Sub category of the connector configuration.
+     */
     @Override
     public String getSubCategory() {
 
         return "DEFAULT";
     }
 
+    /**
+     * Retrieves the order of the connector configuration.
+     *
+     * @return Order of the connector configuration.
+     */
     @Override
     public int getOrder() {
 
         return 0;
     }
 
+    /**
+     * Retrieves the property name mappings of the connector configuration.
+     *
+     * @return Property name mappings of the connector configuration.
+     */
     @Override
     public Map<String, String> getPropertyNameMapping() {
 
@@ -183,6 +235,11 @@ public class PasswordPolicyHandler extends AbstractEventHandler implements Ident
         return nameMapping;
     }
 
+    /**
+     * Retrieves the property description mappings of the connector configuration.
+     *
+     * @return Property description mappings of the connector configuration.
+     */
     @Override
     public Map<String, String> getPropertyDescriptionMapping() {
 
@@ -203,6 +260,11 @@ public class PasswordPolicyHandler extends AbstractEventHandler implements Ident
         return descriptionMapping;
     }
 
+    /**
+     * Retrieves the property names of the connector configuration.
+     *
+     * @return Property names of the connector configuration.
+     */
     @Override
     public String[] getPropertyNames() {
 
@@ -214,6 +276,11 @@ public class PasswordPolicyHandler extends AbstractEventHandler implements Ident
         return properties.toArray(new String[0]);
     }
 
+    /**
+     * Retrieves the default property values of the connector configuration.
+     *
+     * @return Deafult property values of the connector configuration.
+     */
     @Override
     public Properties getDefaultPropertyValues(String tenantDomain) {
 

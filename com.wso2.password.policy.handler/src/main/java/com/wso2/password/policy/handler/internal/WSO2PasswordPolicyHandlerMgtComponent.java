@@ -20,7 +20,7 @@ import org.wso2.carbon.identity.governance.IdentityGovernanceService;
  * OSGi service component which registers the password policy event handler and sets the bundle context.
  */
 @Component(
-        name = "com.wso2.custom.identity.password.policy.handler.internal.IdentityCustomPasswordPolicyServiceComponent",
+        name = "com.wso2.password.policy.handler.internal.WSO2PasswordPolicyHandlerMgtComponent",
         immediate = true)
 public class WSO2PasswordPolicyHandlerMgtComponent {
 
@@ -43,7 +43,7 @@ public class WSO2PasswordPolicyHandlerMgtComponent {
                 FileBasedCommonPasswordValidator.getInstance().initializeData();
             }
             if (log.isDebugEnabled()) {
-                log.debug("The custom password policy handler mgt component is enabled.");
+                log.debug("The password policy handler mgt component is enabled.");
             }
         } catch (Throwable throwable) {
             log.error("Error while activating the password policy handler mgt component.", throwable);
@@ -58,12 +58,12 @@ public class WSO2PasswordPolicyHandlerMgtComponent {
                 // Destroy the common password data repository.
                 DBBasedCommonPasswordValidator.getInstance().destroyData();
             } catch (Throwable throwable) {
-                log.error("Error while deactivating the custom password policy handler mgt component.", throwable);
+                log.error("Error while deactivating the password policy handler mgt component.", throwable);
             }
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("The custom password policy handler mgt component is de-activated.");
+            log.debug("The password policy handler mgt component is de-activated.");
         }
     }
 

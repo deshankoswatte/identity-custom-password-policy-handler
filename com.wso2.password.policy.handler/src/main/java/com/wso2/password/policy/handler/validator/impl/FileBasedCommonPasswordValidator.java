@@ -4,6 +4,8 @@ import com.wso2.common.constant.Constants;
 import com.wso2.common.exception.WSO2Exception;
 import com.wso2.password.policy.handler.validator.AbstractPasswordValidator;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -18,6 +20,7 @@ import java.util.Vector;
  */
 public class FileBasedCommonPasswordValidator extends AbstractPasswordValidator {
 
+    private static final Log log = LogFactory.getLog(FileBasedCommonPasswordValidator.class);
     private static final FileBasedCommonPasswordValidator fileBasedCommonPasswordValidator =
             new FileBasedCommonPasswordValidator();
     private List<String> commonPasswordsList = new Vector<>();
@@ -73,6 +76,11 @@ public class FileBasedCommonPasswordValidator extends AbstractPasswordValidator 
         for (String commonPassword : commonPasswordsList) {
             String processedCommonPassword = StringUtils.deleteWhitespace(commonPassword.toLowerCase(Locale.ROOT));
             if (credential.contains(processedCommonPassword) || processedCommonPassword.contains(credential)) {
+                if (log.isDebugEnabled()) {
+                    log.debug(String.format(
+                            "There is a match between the credential: %s and a common password: %s.",
+                            credential, processedCommonPassword));
+                }
                 return false;
             }
         }

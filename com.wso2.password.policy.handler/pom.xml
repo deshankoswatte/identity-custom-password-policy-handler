@@ -10,7 +10,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>com.wso2.custom.identity.password.policy.handler</artifactId>
+    <artifactId>com.wso2.password.policy.handler</artifactId>
     <packaging>bundle</packaging>
     <name>WSO2 - Password Policy Handler Module</name>
     <description>A password policy handler to restrict the use of common password and user attribute based passwords.

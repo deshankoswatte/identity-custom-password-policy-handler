@@ -28,7 +28,6 @@ public class Constants {
     public static final String CONFIG_RESTRICTED_CLAIMS_DISPLAYED_NAME = "Restricted Claims";
     public static final String CONFIG_RESTRICTED_CLAIMS_DESCRIPTION =
             "Claims which the values are restricted to be used as passwords.";
-    //public static final List<String> CONFIG_RESTRICTED_CLAIMS_DEFAULT_VALUE = new ArrayList<>();
 
     // SQL Queries related to the custom password policy handler component.
     public static final String TABLE_NAME = "IDN_COMMON_PASSWORD_STORE";
@@ -71,14 +70,26 @@ public class Constants {
                 "40005",
                 "An error occurred while removing the common password repository data from the database."
         ),
+        ERROR_EMPTY_USER_STORE_MANAGER(
+                "40006",
+                "The user store manager is empty."
+        ),
+        ERROR_RETRIEVING_CLAIM_URIS(
+                "40007",
+                "An error occurred while retrieving the claim uris."
+        ),
+        ERROR_RETRIEVING_USER_CLAIMS(
+                "40008",
+                "An error occurred while retrieving the user claims."
+        ),
         // Error code enforced when the password either contains a common password or a user claim.
         ERROR_CODE_VALIDATING_COMMON_PASSWORD_POLICY(
-                "40006",
+                "40009",
                 "The new password is vulnerable for security issues since it is a commonly used password. " +
                         "Please use another password instead."
         ),
         ERROR_CODE_VALIDATING_USER_ATTRIBUTE_PASSWORD_POLICY(
-                "40007", "The new password is vulnerable for security issues since it contains user " +
+                "40010", "The new password is vulnerable for security issues since it contains user " +
                 "attributes. Please use another password instead."
         );
 
