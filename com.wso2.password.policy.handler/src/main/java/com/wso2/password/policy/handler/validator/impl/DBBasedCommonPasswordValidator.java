@@ -2,6 +2,7 @@ package com.wso2.password.policy.handler.validator.impl;
 
 import com.wso2.common.constant.Constants;
 import com.wso2.common.exception.WSO2Exception;
+import com.wso2.password.policy.handler.util.PasswordPolicyHandlerUtils;
 import com.wso2.password.policy.handler.validator.AbstractPasswordValidator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -107,8 +108,8 @@ public class DBBasedCommonPasswordValidator extends AbstractPasswordValidator {
         Connection connection = IdentityDatabaseUtil.getDBConnection(true);
         try (PreparedStatement prepStmtIns = connection.prepareStatement(
                 Constants.INSERT_VALUES_TO_COMMON_PASSWORD_STORE);
-             BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(Constants.PASSWORD_FILE_PATH),
-                     StandardCharsets.UTF_8)) {
+             BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(
+                     PasswordPolicyHandlerUtils.getCommonPasswordFilePath()), StandardCharsets.UTF_8)) {
 
             // Insert values and replace duplicates.
             String password;

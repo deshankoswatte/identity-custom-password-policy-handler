@@ -2,6 +2,7 @@ package com.wso2.password.policy.handler.validator.impl;
 
 import com.wso2.common.constant.Constants;
 import com.wso2.common.exception.WSO2Exception;
+import com.wso2.password.policy.handler.util.PasswordPolicyHandlerUtils;
 import com.wso2.password.policy.handler.validator.AbstractPasswordValidator;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -52,7 +53,8 @@ public class FileBasedCommonPasswordValidator extends AbstractPasswordValidator 
     public void initializeData() throws WSO2Exception {
 
         try {
-            commonPasswordsList = Files.readAllLines(Paths.get(Constants.PASSWORD_FILE_PATH), StandardCharsets.UTF_8);
+            commonPasswordsList = Files.readAllLines(Paths.get(PasswordPolicyHandlerUtils.getCommonPasswordFilePath()),
+                    StandardCharsets.UTF_8);
         } catch (IOException exception) {
             throw new WSO2Exception(
                     Constants.ErrorMessages.ERROR_READING_FROM_COMMON_PASSWORDS_FILE.getCode(),

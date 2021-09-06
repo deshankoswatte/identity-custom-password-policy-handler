@@ -32,4 +32,23 @@ public class PasswordPolicyHandlerUtils {
         }
         return IdentityException.error(IdentityEventException.class, error.getCode(), errorDescription);
     }
+
+    /**
+     * Retrieves the file path for the common password file.
+     *
+     * @return File path of the common password file.
+     */
+    public static String getCommonPasswordFilePath() {
+
+        String commonPasswordFilePath;
+        String customCommonPasswordFileName = System.getProperty("commonPasswordFileName");
+
+        if (StringUtils.isBlank(customCommonPasswordFileName)) {
+            commonPasswordFilePath = Constants.PASSWORD_FILE_PATH;
+        } else {
+            commonPasswordFilePath = Constants.PASSWORD_FILE_DIR + customCommonPasswordFileName;
+        }
+
+        return commonPasswordFilePath;
+    }
 }
