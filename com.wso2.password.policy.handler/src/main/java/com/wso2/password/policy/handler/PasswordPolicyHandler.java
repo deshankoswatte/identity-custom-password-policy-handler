@@ -279,7 +279,7 @@ public class PasswordPolicyHandler extends AbstractEventHandler implements Ident
     /**
      * Retrieves the default property values of the connector configuration.
      *
-     * @return Deafult property values of the connector configuration.
+     * @return Default property values of the connector configuration.
      */
     @Override
     public Properties getDefaultPropertyValues(String tenantDomain) {
