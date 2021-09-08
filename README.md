@@ -30,10 +30,9 @@ mvn clean install
 
 ### Deploy
 
-1. After successfully building the project, copy the `com.wso2.password.policy.handler-1.0.0-SNAPSHOT.jar`
-   artifact from the target folder and paste it inside the `<IS HOME>/repository/components/dropins` folder. In addition
-   to that, copy the `com.wso2.common-1.0.0-SNAPSHOT.jar` artifact from the target folder and paste it inside
-   the `<IS HOME>/repository/components/lib` folder.
+1. After successfully building the project, copy the artifacts `com.wso2.password.policy.handler-1.0.0-SNAPSHOT.jar`
+   and `com.wso2.common-1.0.0-SNAPSHOT.jar` from the target folder and paste it inside
+   the `<IS HOME>/repository/components/dropins` folder.
 2. Then, copy the `<COMMON_PASSWORDS_FILE_NAME.txt>` file and paste it
    in `<IS HOME>/repository/deployment/server/commonpasswords` (Note: You should create the directory `commonpasswords`
    if it does not exist). You can find a sample common passwords file named `<commonpasswords.txt>` at `target/classes`.
