@@ -86,9 +86,6 @@
                             version="${identity.governance.imp.pkg.version.range}",
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
-                        <Embed-Dependency>
-                            com.wso2.common; inline=true
-                        </Embed-Dependency>
                     </instructions>
                 </configuration>
             </plugin>
